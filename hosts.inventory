@@ -1,0 +1,6 @@
+localhost
+
+[clusternodes]
+
+[clusternodes:vars]
+localhost ansible_connection=ssh ansible_private_key_file=/Users/vdev137/Downloads/vis_key.pem ansible_user=vis

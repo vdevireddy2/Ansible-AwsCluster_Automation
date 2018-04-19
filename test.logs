@@ -1,0 +1,229 @@
+Task: 
+------
+Develop an Ansible automation that creates a Cassandra cluster in AWS with 3 nodes, using ec2 instances (vanilla images, Cassandra must be installed and configured via Ansible automation). The cluster must be up and running at the end of the exercise and the candidate must be able to connect using cqlsh.
+
+
+Commands:
+
+1) nikra@nikra-pc:~/Desktop/orion/ansible-ec2-cassandra-cluster-deploy$ ansible-playbook -vv  create-ec2.yml -i inventory --private-key ./hadoop.pem 
+
+2) nikra@nikra-pc:~/Desktop/orion/ansible-ec2-cassandra-cluster-deploy$ sudo ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook  deploy_cassandra.yml -i hosts.inventory --extra-vars '{"nodes": ["52.65.18.156","52.65.177.236","52.65.113.244"],"nodesp": ["17.31.10.247","172.31.9.25","172.31.13.14"]}' -vvv --private-key ./hadoop.pem
+
+3) login to aws host and execute: cqlsh 'private-ip -l'
+
+Step 1: Create EC2 on AWS.AMAZON.com
+------------------------------------
+
+nikra@nikra-pc:~/Desktop/orion/ansible-ec2-cassandra-cluster-deploy$ ansible-playbook -vv  create-ec2.yml -i inventory --private-key /home/nikra/.ssh/hadoop.pem 
+
+Using /etc/ansible/ansible.cfg as config file
+
+PLAYBOOK: create-ec2.yml *****************************************************************************************************************
+1 plays in create-ec2.yml
+
+PLAY [localhost] *************************************************************************************************************************
+
+TASK [include_vars] **********************************************************************************************************************
+task path: /home/nikra/Desktop/orion/ansible-ec2-cassandra-cluster-deploy/create-ec2.yml:8
+ok: [localhost] => {"ansible_facts": {"ec2_image": "ami-e2021d81", "ec2_instance_type": "t2.micro", "ec2_keypair": "hadoop", "ec2_region": "ap-southeast-2", "ec2_security_group": "sg-b15c42d6", "ec2_subnet_ids": ["subnet-894c40ed", "subnet-894c40ed", "subnet-894c40ed"], "ec2_tag_Environment": "production", "ec2_tag_Name": "cassandra", "ec2_tag_Type": "cassandra", "ec2_volume_size": 8}, "changed": false}
+META: ran handlers
+
+TASK [create_ec2 : Provision EC2 Box] ****************************************************************************************************
+task path: /home/nikra/Desktop/orion/ansible-ec2-cassandra-cluster-deploy/roles/create_ec2/tasks/main.yml:3
+changed: [localhost -> localhost] => {"changed": true, "instance_ids": ["i-07d5c4f27bbc1f265", "i-0cdb5daac3a1a1a9f", "i-0e7fe0cce5c90561a"], "instances": [{"ami_launch_index": "0", "architecture": "x86_64", "block_device_mapping": {"/dev/sda1": {"delete_on_termination": true, "status": "attached", "volume_id": "vol-00e3dcdc59dd196b6"}}, "dns_name": "ec2-52-65-18-156.ap-southeast-2.compute.amazonaws.com", "ebs_optimized": false, "groups": {"sg-b15c42d6": "default"}, "hypervisor": "xen", "id": "i-07d5c4f27bbc1f265", "image_id": "ami-e2021d81", "instance_type": "t2.micro", "kernel": null, "key_name": "hadoop", "launch_time": "2017-08-06T11:42:58.000Z", "placement": "ap-southeast-2a", "private_dns_name": "ip-172-31-10-247.ap-southeast-2.compute.internal", "private_ip": "172.31.10.247", "public_dns_name": "ec2-52-65-18-156.ap-southeast-2.compute.amazonaws.com", "public_ip": "52.65.18.156", "ramdisk": null, "region": "ap-southeast-2", "root_device_name": "/dev/sda1", "root_device_type": "ebs", "state": "running", "state_code": 16, "tags": {"Environment": "production", "Name": "cassandra", "Type": "cassandra"}, "tenancy": "default", "virtualization_type": "hvm"}, {"ami_launch_index": "1", "architecture": "x86_64", "block_device_mapping": {"/dev/sda1": {"delete_on_termination": true, "status": "attached", "volume_id": "vol-0fa3cd4b7aaf962c5"}}, "dns_name": "ec2-52-65-177-236.ap-southeast-2.compute.amazonaws.com", "ebs_optimized": false, "groups": {"sg-b15c42d6": "default"}, "hypervisor": "xen", "id": "i-0cdb5daac3a1a1a9f", "image_id": "ami-e2021d81", "instance_type": "t2.micro", "kernel": null, "key_name": "hadoop", "launch_time": "2017-08-06T11:42:58.000Z", "placement": "ap-southeast-2a", "private_dns_name": "ip-172-31-9-25.ap-southeast-2.compute.internal", "private_ip": "172.31.9.25", "public_dns_name": "ec2-52-65-177-236.ap-southeast-2.compute.amazonaws.com", "public_ip": "52.65.177.236", "ramdisk": null, "region": "ap-southeast-2", "root_device_name": "/dev/sda1", "root_device_type": "ebs", "state": "running", "state_code": 16, "tags": {"Environment": "production", "Name": "cassandra", "Type": "cassandra"}, "tenancy": "default", "virtualization_type": "hvm"}, {"ami_launch_index": "2", "architecture": "x86_64", "block_device_mapping": {"/dev/sda1": {"delete_on_termination": true, "status": "attached", "volume_id": "vol-081d68aae359cd90d"}}, "dns_name": "ec2-52-65-113-244.ap-southeast-2.compute.amazonaws.com", "ebs_optimized": false, "groups": {"sg-b15c42d6": "default"}, "hypervisor": "xen", "id": "i-0e7fe0cce5c90561a", "image_id": "ami-e2021d81", "instance_type": "t2.micro", "kernel": null, "key_name": "hadoop", "launch_time": "2017-08-06T11:42:58.000Z", "placement": "ap-southeast-2a", "private_dns_name": "ip-172-31-13-14.ap-southeast-2.compute.internal", "private_ip": "172.31.13.14", "public_dns_name": "ec2-52-65-113-244.ap-southeast-2.compute.amazonaws.com", "public_ip": "52.65.113.244", "ramdisk": null, "region": "ap-southeast-2", "root_device_name": "/dev/sda1", "root_device_type": "ebs", "state": "running", "state_code": 16, "tags": {"Environment": "production", "Name": "cassandra", "Type": "cassandra"}, "tenancy": "default", "virtualization_type": "hvm"}], "tagged_instances": []}
+
+TASK [create_ec2 : debug] ****************************************************************************************************************
+task path: /home/nikra/Desktop/orion/ansible-ec2-cassandra-cluster-deploy/roles/create_ec2/tasks/main.yml:25
+ok: [localhost] => (item={u'kernel': None, u'root_device_type': u'ebs', u'private_dns_name': u'ip-172-31-10-247.ap-southeast-2.compute.internal', u'public_ip': u'52.65.18.156', u'private_ip': u'172.31.10.247', u'id': u'i-07d5c4f27bbc1f265', u'ebs_optimized': False, u'state': u'running', u'virtualization_type': u'hvm', u'architecture': u'x86_64', u'ramdisk': None, u'block_device_mapping': {u'/dev/sda1': {u'status': u'attached', u'delete_on_termination': True, u'volume_id': u'vol-00e3dcdc59dd196b6'}}, u'key_name': u'hadoop', u'image_id': u'ami-e2021d81', u'tenancy': u'default', u'groups': {u'sg-b15c42d6': u'default'}, u'public_dns_name': u'ec2-52-65-18-156.ap-southeast-2.compute.amazonaws.com', u'state_code': 16, u'tags': {u'Environment': u'production', u'Type': u'cassandra', u'Name': u'cassandra'}, u'placement': u'ap-southeast-2a', u'ami_launch_index': u'0', u'dns_name': u'ec2-52-65-18-156.ap-southeast-2.compute.amazonaws.com', u'region': u'ap-southeast-2', u'launch_time': u'2017-08-06T11:42:58.000Z', u'instance_type': u't2.micro', u'root_device_name': u'/dev/sda1', u'hypervisor': u'xen'}) => {
+    "item": {
+        "ami_launch_index": "0", 
+        "architecture": "x86_64", 
+        "block_device_mapping": {
+            "/dev/sda1": {
+                "delete_on_termination": true, 
+                "status": "attached", 
+                "volume_id": "vol-00e3dcdc59dd196b6"
+            }
+        }, 
+        "dns_name": "ec2-52-65-18-156.ap-southeast-2.compute.amazonaws.com", 
+        "ebs_optimized": false, 
+        "groups": {
+            "sg-b15c42d6": "default"
+        }, 
+        "hypervisor": "xen", 
+        "id": "i-07d5c4f27bbc1f265", 
+        "image_id": "ami-e2021d81", 
+        "instance_type": "t2.micro", 
+        "kernel": null, 
+        "key_name": "hadoop", 
+        "launch_time": "2017-08-06T11:42:58.000Z", 
+        "placement": "ap-southeast-2a", 
+        "private_dns_name": "ip-172-31-10-247.ap-southeast-2.compute.internal", 
+        "private_ip": "172.31.10.247", 
+        "public_dns_name": "ec2-52-65-18-156.ap-southeast-2.compute.amazonaws.com", 
+        "public_ip": "52.65.18.156", 
+        "ramdisk": null, 
+        "region": "ap-southeast-2", 
+        "root_device_name": "/dev/sda1", 
+        "root_device_type": "ebs", 
+        "state": "running", 
+        "state_code": 16, 
+        "tags": {
+            "Environment": "production", 
+            "Name": "cassandra", 
+            "Type": "cassandra"
+        }, 
+        "tenancy": "default", 
+        "virtualization_type": "hvm"
+    }
+}
+ok: [localhost] => (item={u'kernel': None, u'root_device_type': u'ebs', u'private_dns_name': u'ip-172-31-9-25.ap-southeast-2.compute.internal', u'public_ip': u'52.65.177.236', u'private_ip': u'172.31.9.25', u'id': u'i-0cdb5daac3a1a1a9f', u'ebs_optimized': False, u'state': u'running', u'virtualization_type': u'hvm', u'architecture': u'x86_64', u'ramdisk': None, u'block_device_mapping': {u'/dev/sda1': {u'status': u'attached', u'delete_on_termination': True, u'volume_id': u'vol-0fa3cd4b7aaf962c5'}}, u'key_name': u'hadoop', u'image_id': u'ami-e2021d81', u'tenancy': u'default', u'groups': {u'sg-b15c42d6': u'default'}, u'public_dns_name': u'ec2-52-65-177-236.ap-southeast-2.compute.amazonaws.com', u'state_code': 16, u'tags': {u'Environment': u'production', u'Type': u'cassandra', u'Name': u'cassandra'}, u'placement': u'ap-southeast-2a', u'ami_launch_index': u'1', u'dns_name': u'ec2-52-65-177-236.ap-southeast-2.compute.amazonaws.com', u'region': u'ap-southeast-2', u'launch_time': u'2017-08-06T11:42:58.000Z', u'instance_type': u't2.micro', u'root_device_name': u'/dev/sda1', u'hypervisor': u'xen'}) => {
+    "item": {
+        "ami_launch_index": "1", 
+        "architecture": "x86_64", 
+        "block_device_mapping": {
+            "/dev/sda1": {
+                "delete_on_termination": true, 
+                "status": "attached", 
+                "volume_id": "vol-0fa3cd4b7aaf962c5"
+            }
+        }, 
+        "dns_name": "ec2-52-65-177-236.ap-southeast-2.compute.amazonaws.com", 
+        "ebs_optimized": false, 
+        "groups": {
+            "sg-b15c42d6": "default"
+        }, 
+        "hypervisor": "xen", 
+        "id": "i-0cdb5daac3a1a1a9f", 
+        "image_id": "ami-e2021d81", 
+        "instance_type": "t2.micro", 
+        "kernel": null, 
+        "key_name": "hadoop", 
+        "launch_time": "2017-08-06T11:42:58.000Z", 
+        "placement": "ap-southeast-2a", 
+        "private_dns_name": "ip-172-31-9-25.ap-southeast-2.compute.internal", 
+        "private_ip": "172.31.9.25", 
+        "public_dns_name": "ec2-52-65-177-236.ap-southeast-2.compute.amazonaws.com", 
+        "public_ip": "52.65.177.236", 
+        "ramdisk": null, 
+        "region": "ap-southeast-2", 
+        "root_device_name": "/dev/sda1", 
+        "root_device_type": "ebs", 
+        "state": "running", 
+        "state_code": 16, 
+        "tags": {
+            "Environment": "production", 
+            "Name": "cassandra", 
+            "Type": "cassandra"
+        }, 
+        "tenancy": "default", 
+        "virtualization_type": "hvm"
+    }
+}
+ok: [localhost] => (item={u'kernel': None, u'root_device_type': u'ebs', u'private_dns_name': u'ip-172-31-13-14.ap-southeast-2.compute.internal', u'public_ip': u'52.65.113.244', u'private_ip': u'172.31.13.14', u'id': u'i-0e7fe0cce5c90561a', u'ebs_optimized': False, u'state': u'running', u'virtualization_type': u'hvm', u'architecture': u'x86_64', u'ramdisk': None, u'block_device_mapping': {u'/dev/sda1': {u'status': u'attached', u'delete_on_termination': True, u'volume_id': u'vol-081d68aae359cd90d'}}, u'key_name': u'hadoop', u'image_id': u'ami-e2021d81', u'tenancy': u'default', u'groups': {u'sg-b15c42d6': u'default'}, u'public_dns_name': u'ec2-52-65-113-244.ap-southeast-2.compute.amazonaws.com', u'state_code': 16, u'tags': {u'Environment': u'production', u'Type': u'cassandra', u'Name': u'cassandra'}, u'placement': u'ap-southeast-2a', u'ami_launch_index': u'2', u'dns_name': u'ec2-52-65-113-244.ap-southeast-2.compute.amazonaws.com', u'region': u'ap-southeast-2', u'launch_time': u'2017-08-06T11:42:58.000Z', u'instance_type': u't2.micro', u'root_device_name': u'/dev/sda1', u'hypervisor': u'xen'}) => {
+    "item": {
+        "ami_launch_index": "2", 
+        "architecture": "x86_64", 
+        "block_device_mapping": {
+            "/dev/sda1": {
+                "delete_on_termination": true, 
+                "status": "attached", 
+                "volume_id": "vol-081d68aae359cd90d"
+            }
+        }, 
+        "dns_name": "ec2-52-65-113-244.ap-southeast-2.compute.amazonaws.com", 
+        "ebs_optimized": false, 
+        "groups": {
+            "sg-b15c42d6": "default"
+        }, 
+        "hypervisor": "xen", 
+        "id": "i-0e7fe0cce5c90561a", 
+        "image_id": "ami-e2021d81", 
+        "instance_type": "t2.micro", 
+        "kernel": null, 
+        "key_name": "hadoop", 
+        "launch_time": "2017-08-06T11:42:58.000Z", 
+        "placement": "ap-southeast-2a", 
+        "private_dns_name": "ip-172-31-13-14.ap-southeast-2.compute.internal", 
+        "private_ip": "172.31.13.14", 
+        "public_dns_name": "ec2-52-65-113-244.ap-southeast-2.compute.amazonaws.com", 
+        "public_ip": "52.65.113.244", 
+        "ramdisk": null, 
+        "region": "ap-southeast-2", 
+        "root_device_name": "/dev/sda1", 
+        "root_device_type": "ebs", 
+        "state": "running", 
+        "state_code": 16, 
+        "tags": {
+            "Environment": "production", 
+            "Name": "cassandra", 
+            "Type": "cassandra"
+        }, 
+        "tenancy": "default", 
+        "virtualization_type": "hvm"
+    }
+}
+
+TASK [create_ec2 : add_host] *************************************************************************************************************
+task path: /home/nikra/Desktop/orion/ansible-ec2-cassandra-cluster-deploy/roles/create_ec2/tasks/main.yml:28
+creating host via 'add_host': hostname=52.65.18.156
+changed: [localhost] => (item={u'kernel': None, u'root_device_type': u'ebs', u'private_dns_name': u'ip-172-31-10-247.ap-southeast-2.compute.internal', u'public_ip': u'52.65.18.156', u'private_ip': u'172.31.10.247', u'id': u'i-07d5c4f27bbc1f265', u'ebs_optimized': False, u'state': u'running', u'virtualization_type': u'hvm', u'architecture': u'x86_64', u'ramdisk': None, u'block_device_mapping': {u'/dev/sda1': {u'status': u'attached', u'delete_on_termination': True, u'volume_id': u'vol-00e3dcdc59dd196b6'}}, u'key_name': u'hadoop', u'image_id': u'ami-e2021d81', u'tenancy': u'default', u'groups': {u'sg-b15c42d6': u'default'}, u'public_dns_name': u'ec2-52-65-18-156.ap-southeast-2.compute.amazonaws.com', u'state_code': 16, u'tags': {u'Environment': u'production', u'Type': u'cassandra', u'Name': u'cassandra'}, u'placement': u'ap-southeast-2a', u'ami_launch_index': u'0', u'dns_name': u'ec2-52-65-18-156.ap-southeast-2.compute.amazonaws.com', u'region': u'ap-southeast-2', u'launch_time': u'2017-08-06T11:42:58.000Z', u'instance_type': u't2.micro', u'root_device_name': u'/dev/sda1', u'hypervisor': u'xen'}) => {"add_host": {"groups": ["tag_Type_cassandra", "tag_Environment_production"], "host_name": "52.65.18.156", "host_vars": {"_raw_params": ">", "ec2_ip_address": "52.65.18.156", "ec2_region": "ap-southeast-2", "ec2_tag_Environment": "production", "ec2_tag_Name": "cassandra", "ec2_tag_Type": "cassandra"}}, "changed": true, "item": {"ami_launch_index": "0", "architecture": "x86_64", "block_device_mapping": {"/dev/sda1": {"delete_on_termination": true, "status": "attached", "volume_id": "vol-00e3dcdc59dd196b6"}}, "dns_name": "ec2-52-65-18-156.ap-southeast-2.compute.amazonaws.com", "ebs_optimized": false, "groups": {"sg-b15c42d6": "default"}, "hypervisor": "xen", "id": "i-07d5c4f27bbc1f265", "image_id": "ami-e2021d81", "instance_type": "t2.micro", "kernel": null, "key_name": "hadoop", "launch_time": "2017-08-06T11:42:58.000Z", "placement": "ap-southeast-2a", "private_dns_name": "ip-172-31-10-247.ap-southeast-2.compute.internal", "private_ip": "172.31.10.247", "public_dns_name": "ec2-52-65-18-156.ap-southeast-2.compute.amazonaws.com", "public_ip": "52.65.18.156", "ramdisk": null, "region": "ap-southeast-2", "root_device_name": "/dev/sda1", "root_device_type": "ebs", "state": "running", "state_code": 16, "tags": {"Environment": "production", "Name": "cassandra", "Type": "cassandra"}, "tenancy": "default", "virtualization_type": "hvm"}}
+creating host via 'add_host': hostname=52.65.177.236
+changed: [localhost] => (item={u'kernel': None, u'root_device_type': u'ebs', u'private_dns_name': u'ip-172-31-9-25.ap-southeast-2.compute.internal', u'public_ip': u'52.65.177.236', u'private_ip': u'172.31.9.25', u'id': u'i-0cdb5daac3a1a1a9f', u'ebs_optimized': False, u'state': u'running', u'virtualization_type': u'hvm', u'architecture': u'x86_64', u'ramdisk': None, u'block_device_mapping': {u'/dev/sda1': {u'status': u'attached', u'delete_on_termination': True, u'volume_id': u'vol-0fa3cd4b7aaf962c5'}}, u'key_name': u'hadoop', u'image_id': u'ami-e2021d81', u'tenancy': u'default', u'groups': {u'sg-b15c42d6': u'default'}, u'public_dns_name': u'ec2-52-65-177-236.ap-southeast-2.compute.amazonaws.com', u'state_code': 16, u'tags': {u'Environment': u'production', u'Type': u'cassandra', u'Name': u'cassandra'}, u'placement': u'ap-southeast-2a', u'ami_launch_index': u'1', u'dns_name': u'ec2-52-65-177-236.ap-southeast-2.compute.amazonaws.com', u'region': u'ap-southeast-2', u'launch_time': u'2017-08-06T11:42:58.000Z', u'instance_type': u't2.micro', u'root_device_name': u'/dev/sda1', u'hypervisor': u'xen'}) => {"add_host": {"groups": ["tag_Type_cassandra", "tag_Environment_production"], "host_name": "52.65.177.236", "host_vars": {"_raw_params": ">", "ec2_ip_address": "52.65.177.236", "ec2_region": "ap-southeast-2", "ec2_tag_Environment": "production", "ec2_tag_Name": "cassandra", "ec2_tag_Type": "cassandra"}}, "changed": true, "item": {"ami_launch_index": "1", "architecture": "x86_64", "block_device_mapping": {"/dev/sda1": {"delete_on_termination": true, "status": "attached", "volume_id": "vol-0fa3cd4b7aaf962c5"}}, "dns_name": "ec2-52-65-177-236.ap-southeast-2.compute.amazonaws.com", "ebs_optimized": false, "groups": {"sg-b15c42d6": "default"}, "hypervisor": "xen", "id": "i-0cdb5daac3a1a1a9f", "image_id": "ami-e2021d81", "instance_type": "t2.micro", "kernel": null, "key_name": "hadoop", "launch_time": "2017-08-06T11:42:58.000Z", "placement": "ap-southeast-2a", "private_dns_name": "ip-172-31-9-25.ap-southeast-2.compute.internal", "private_ip": "172.31.9.25", "public_dns_name": "ec2-52-65-177-236.ap-southeast-2.compute.amazonaws.com", "public_ip": "52.65.177.236", "ramdisk": null, "region": "ap-southeast-2", "root_device_name": "/dev/sda1", "root_device_type": "ebs", "state": "running", "state_code": 16, "tags": {"Environment": "production", "Name": "cassandra", "Type": "cassandra"}, "tenancy": "default", "virtualization_type": "hvm"}}
+creating host via 'add_host': hostname=52.65.113.244
+changed: [localhost] => (item={u'kernel': None, u'root_device_type': u'ebs', u'private_dns_name': u'ip-172-31-13-14.ap-southeast-2.compute.internal', u'public_ip': u'52.65.113.244', u'private_ip': u'172.31.13.14', u'id': u'i-0e7fe0cce5c90561a', u'ebs_optimized': False, u'state': u'running', u'virtualization_type': u'hvm', u'architecture': u'x86_64', u'ramdisk': None, u'block_device_mapping': {u'/dev/sda1': {u'status': u'attached', u'delete_on_termination': True, u'volume_id': u'vol-081d68aae359cd90d'}}, u'key_name': u'hadoop', u'image_id': u'ami-e2021d81', u'tenancy': u'default', u'groups': {u'sg-b15c42d6': u'default'}, u'public_dns_name': u'ec2-52-65-113-244.ap-southeast-2.compute.amazonaws.com', u'state_code': 16, u'tags': {u'Environment': u'production', u'Type': u'cassandra', u'Name': u'cassandra'}, u'placement': u'ap-southeast-2a', u'ami_launch_index': u'2', u'dns_name': u'ec2-52-65-113-244.ap-southeast-2.compute.amazonaws.com', u'region': u'ap-southeast-2', u'launch_time': u'2017-08-06T11:42:58.000Z', u'instance_type': u't2.micro', u'root_device_name': u'/dev/sda1', u'hypervisor': u'xen'}) => {"add_host": {"groups": ["tag_Type_cassandra", "tag_Environment_production"], "host_name": "52.65.113.244", "host_vars": {"_raw_params": ">", "ec2_ip_address": "52.65.113.244", "ec2_region": "ap-southeast-2", "ec2_tag_Environment": "production", "ec2_tag_Name": "cassandra", "ec2_tag_Type": "cassandra"}}, "changed": true, "item": {"ami_launch_index": "2", "architecture": "x86_64", "block_device_mapping": {"/dev/sda1": {"delete_on_termination": true, "status": "attached", "volume_id": "vol-081d68aae359cd90d"}}, "dns_name": "ec2-52-65-113-244.ap-southeast-2.compute.amazonaws.com", "ebs_optimized": false, "groups": {"sg-b15c42d6": "default"}, "hypervisor": "xen", "id": "i-0e7fe0cce5c90561a", "image_id": "ami-e2021d81", "instance_type": "t2.micro", "kernel": null, "key_name": "hadoop", "launch_time": "2017-08-06T11:42:58.000Z", "placement": "ap-southeast-2a", "private_dns_name": "ip-172-31-13-14.ap-southeast-2.compute.internal", "private_ip": "172.31.13.14", "public_dns_name": "ec2-52-65-113-244.ap-southeast-2.compute.amazonaws.com", "public_ip": "52.65.113.244", "ramdisk": null, "region": "ap-southeast-2", "root_device_name": "/dev/sda1", "root_device_type": "ebs", "state": "running", "state_code": 16, "tags": {"Environment": "production", "Name": "cassandra", "Type": "cassandra"}, "tenancy": "default", "virtualization_type": "hvm"}}
+
+TASK [create_ec2 : Wait for the instances to boot by checking the ssh port] **************************************************************
+task path: /home/nikra/Desktop/orion/ansible-ec2-cassandra-cluster-deploy/roles/create_ec2/tasks/main.yml:37
+ok: [localhost] => (item={u'kernel': None, u'root_device_type': u'ebs', u'private_dns_name': u'ip-172-31-10-247.ap-southeast-2.compute.internal', u'public_ip': u'52.65.18.156', u'private_ip': u'172.31.10.247', u'id': u'i-07d5c4f27bbc1f265', u'ebs_optimized': False, u'state': u'running', u'virtualization_type': u'hvm', u'architecture': u'x86_64', u'ramdisk': None, u'block_device_mapping': {u'/dev/sda1': {u'status': u'attached', u'delete_on_termination': True, u'volume_id': u'vol-00e3dcdc59dd196b6'}}, u'key_name': u'hadoop', u'image_id': u'ami-e2021d81', u'tenancy': u'default', u'groups': {u'sg-b15c42d6': u'default'}, u'public_dns_name': u'ec2-52-65-18-156.ap-southeast-2.compute.amazonaws.com', u'state_code': 16, u'tags': {u'Environment': u'production', u'Type': u'cassandra', u'Name': u'cassandra'}, u'placement': u'ap-southeast-2a', u'ami_launch_index': u'0', u'dns_name': u'ec2-52-65-18-156.ap-southeast-2.compute.amazonaws.com', u'region': u'ap-southeast-2', u'launch_time': u'2017-08-06T11:42:58.000Z', u'instance_type': u't2.micro', u'root_device_name': u'/dev/sda1', u'hypervisor': u'xen'}) => {"changed": false, "elapsed": 60, "item": {"ami_launch_index": "0", "architecture": "x86_64", "block_device_mapping": {"/dev/sda1": {"delete_on_termination": true, "status": "attached", "volume_id": "vol-00e3dcdc59dd196b6"}}, "dns_name": "ec2-52-65-18-156.ap-southeast-2.compute.amazonaws.com", "ebs_optimized": false, "groups": {"sg-b15c42d6": "default"}, "hypervisor": "xen", "id": "i-07d5c4f27bbc1f265", "image_id": "ami-e2021d81", "instance_type": "t2.micro", "kernel": null, "key_name": "hadoop", "launch_time": "2017-08-06T11:42:58.000Z", "placement": "ap-southeast-2a", "private_dns_name": "ip-172-31-10-247.ap-southeast-2.compute.internal", "private_ip": "172.31.10.247", "public_dns_name": "ec2-52-65-18-156.ap-southeast-2.compute.amazonaws.com", "public_ip": "52.65.18.156", "ramdisk": null, "region": "ap-southeast-2", "root_device_name": "/dev/sda1", "root_device_type": "ebs", "state": "running", "state_code": 16, "tags": {"Environment": "production", "Name": "cassandra", "Type": "cassandra"}, "tenancy": "default", "virtualization_type": "hvm"}, "path": null, "port": 22, "search_regex": null, "state": "started"}
+ok: [localhost] => (item={u'kernel': None, u'root_device_type': u'ebs', u'private_dns_name': u'ip-172-31-9-25.ap-southeast-2.compute.internal', u'public_ip': u'52.65.177.236', u'private_ip': u'172.31.9.25', u'id': u'i-0cdb5daac3a1a1a9f', u'ebs_optimized': False, u'state': u'running', u'virtualization_type': u'hvm', u'architecture': u'x86_64', u'ramdisk': None, u'block_device_mapping': {u'/dev/sda1': {u'status': u'attached', u'delete_on_termination': True, u'volume_id': u'vol-0fa3cd4b7aaf962c5'}}, u'key_name': u'hadoop', u'image_id': u'ami-e2021d81', u'tenancy': u'default', u'groups': {u'sg-b15c42d6': u'default'}, u'public_dns_name': u'ec2-52-65-177-236.ap-southeast-2.compute.amazonaws.com', u'state_code': 16, u'tags': {u'Environment': u'production', u'Type': u'cassandra', u'Name': u'cassandra'}, u'placement': u'ap-southeast-2a', u'ami_launch_index': u'1', u'dns_name': u'ec2-52-65-177-236.ap-southeast-2.compute.amazonaws.com', u'region': u'ap-southeast-2', u'launch_time': u'2017-08-06T11:42:58.000Z', u'instance_type': u't2.micro', u'root_device_name': u'/dev/sda1', u'hypervisor': u'xen'}) => {"changed": false, "elapsed": 60, "item": {"ami_launch_index": "1", "architecture": "x86_64", "block_device_mapping": {"/dev/sda1": {"delete_on_termination": true, "status": "attached", "volume_id": "vol-0fa3cd4b7aaf962c5"}}, "dns_name": "ec2-52-65-177-236.ap-southeast-2.compute.amazonaws.com", "ebs_optimized": false, "groups": {"sg-b15c42d6": "default"}, "hypervisor": "xen", "id": "i-0cdb5daac3a1a1a9f", "image_id": "ami-e2021d81", "instance_type": "t2.micro", "kernel": null, "key_name": "hadoop", "launch_time": "2017-08-06T11:42:58.000Z", "placement": "ap-southeast-2a", "private_dns_name": "ip-172-31-9-25.ap-southeast-2.compute.internal", "private_ip": "172.31.9.25", "public_dns_name": "ec2-52-65-177-236.ap-southeast-2.compute.amazonaws.com", "public_ip": "52.65.177.236", "ramdisk": null, "region": "ap-southeast-2", "root_device_name": "/dev/sda1", "root_device_type": "ebs", "state": "running", "state_code": 16, "tags": {"Environment": "production", "Name": "cassandra", "Type": "cassandra"}, "tenancy": "default", "virtualization_type": "hvm"}, "path": null, "port": 22, "search_regex": null, "state": "started"}
+ok: [localhost] => (item={u'kernel': None, u'root_device_type': u'ebs', u'private_dns_name': u'ip-172-31-13-14.ap-southeast-2.compute.internal', u'public_ip': u'52.65.113.244', u'private_ip': u'172.31.13.14', u'id': u'i-0e7fe0cce5c90561a', u'ebs_optimized': False, u'state': u'running', u'virtualization_type': u'hvm', u'architecture': u'x86_64', u'ramdisk': None, u'block_device_mapping': {u'/dev/sda1': {u'status': u'attached', u'delete_on_termination': True, u'volume_id': u'vol-081d68aae359cd90d'}}, u'key_name': u'hadoop', u'image_id': u'ami-e2021d81', u'tenancy': u'default', u'groups': {u'sg-b15c42d6': u'default'}, u'public_dns_name': u'ec2-52-65-113-244.ap-southeast-2.compute.amazonaws.com', u'state_code': 16, u'tags': {u'Environment': u'production', u'Type': u'cassandra', u'Name': u'cassandra'}, u'placement': u'ap-southeast-2a', u'ami_launch_index': u'2', u'dns_name': u'ec2-52-65-113-244.ap-southeast-2.compute.amazonaws.com', u'region': u'ap-southeast-2', u'launch_time': u'2017-08-06T11:42:58.000Z', u'instance_type': u't2.micro', u'root_device_name': u'/dev/sda1', u'hypervisor': u'xen'}) => {"changed": false, "elapsed": 60, "item": {"ami_launch_index": "2", "architecture": "x86_64", "block_device_mapping": {"/dev/sda1": {"delete_on_termination": true, "status": "attached", "volume_id": "vol-081d68aae359cd90d"}}, "dns_name": "ec2-52-65-113-244.ap-southeast-2.compute.amazonaws.com", "ebs_optimized": false, "groups": {"sg-b15c42d6": "default"}, "hypervisor": "xen", "id": "i-0e7fe0cce5c90561a", "image_id": "ami-e2021d81", "instance_type": "t2.micro", "kernel": null, "key_name": "hadoop", "launch_time": "2017-08-06T11:42:58.000Z", "placement": "ap-southeast-2a", "private_dns_name": "ip-172-31-13-14.ap-southeast-2.compute.internal", "private_ip": "172.31.13.14", "public_dns_name": "ec2-52-65-113-244.ap-southeast-2.compute.amazonaws.com", "public_ip": "52.65.113.244", "ramdisk": null, "region": "ap-southeast-2", "root_device_name": "/dev/sda1", "root_device_type": "ebs", "state": "running", "state_code": 16, "tags": {"Environment": "production", "Name": "cassandra", "Type": "cassandra"}, "tenancy": "default", "virtualization_type": "hvm"}, "path": null, "port": 22, "search_regex": null, "state": "started"}
+META: ran handlers
+META: ran handlers
+
+PLAY RECAP *******************************************************************************************************************************
+localhost                  : ok=5    changed=2    unreachable=0    failed=0   
+
+
+
+Step 2:
+
+Install Cassandra cluster
+-------------------------
+
+nikra@nikra-pc:~/Desktop/orion/ansible-ec2-cassandra-cluster-deploy$ sudo ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook  deploy_cassandra.yml -i hosts.inventory --extra-vars '{"nodes": ["52.65.18.156","52.65.177.236","52.65.113.244"],"nodesp": ["17.31.10.247","172.31.9.25","172.31.13.14"]}' -vvv --private-key=~/Downloads/hadoop.pem
+
+
+...
+
+    "rc": 0, 
+    "start": "2017-08-06 12:03:45.632046", 
+    "stderr": "", 
+    "stderr_lines": [], 
+    "stdout": "Datacenter: dc1\n===============\nStatus=Up/Down\n|/ State=Normal/Leaving/Joining/Moving\n--  Address        Load       Tokens       Owns (effective)  Host ID                               Rack\nUN  172.31.13.14   103.22 KB  256          67.1%             2f67d29c-81f6-4a41-896c-a14e518dcd4c  rack1\nUN  172.31.9.25    108.3 KB   256          65.0%             39cfaa1c-d5e3-439b-8c0e-ac2c7535dd77  rack1\nUN  172.31.10.247  88.99 KB   256          68.0%             03b9f9b4-f8f5-4d75-99c4-906bc097905e  rack1", 
+    "stdout_lines": [
+        "Datacenter: dc1", 
+        "===============", 
+        "Status=Up/Down", 
+        "|/ State=Normal/Leaving/Joining/Moving", 
+        "--  Address        Load       Tokens       Owns (effective)  Host ID                               Rack", 
+        "UN  172.31.13.14   103.22 KB  256          67.1%             2f67d29c-81f6-4a41-896c-a14e518dcd4c  rack1", 
+        "UN  172.31.9.25    108.3 KB   256          65.0%             39cfaa1c-d5e3-439b-8c0e-ac2c7535dd77  rack1", 
+        "UN  172.31.10.247  88.99 KB   256          68.0%             03b9f9b4-f8f5-4d75-99c4-906bc097905e  rack1"
+    ]
+}
+META: ran handlers
+META: ran handlers
+
+PLAY RECAP *******************************************************************************************************************************
+52.65.113.244              : ok=20   changed=17   unreachable=0    failed=0   
+52.65.177.236              : ok=20   changed=17   unreachable=0    failed=0   
+52.65.18.156               : ok=21   changed=17   unreachable=0    failed=0   
+localhost                  : ok=2    changed=1    unreachable=0    failed=0  
+
+
+
+
+-----------------------------
+
+cqlsh 'private-ip -l'

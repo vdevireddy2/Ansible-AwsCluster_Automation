@@ -1,0 +1,10 @@
+ec2_keypair: "$REPLACE_WITH_AWS_EC2_KEYPAIR"
+ec2_security_group: "$REPLACE_WITH_AWS_SECURITY_GROUP"
+ec2_instance_type: "t2.micro"
+ec2_image: "ami-e21"
+ec2_subnet_ids: ['subnet-8940ed','subnet-840ed','subnet-840ed']
+ec2_region: "ap-southeast-2"
+ec2_tag_Name: "cassandra"
+ec2_tag_Type: "cassandra"
+ec2_tag_Environment: "test"
+ec2_volume_size: 3

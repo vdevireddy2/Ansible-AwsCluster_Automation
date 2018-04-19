@@ -1,0 +1,10 @@
+---
+ - hosts: localhost
+   connection: local
+   gather_facts: false
+   become: False
+   user: vis
+   pre_tasks:
+    - include_vars: ec2-variables.yml
+   roles:
+    - create_ec2
